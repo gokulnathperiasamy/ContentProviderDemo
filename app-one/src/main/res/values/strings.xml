@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">App One</string>
+    <string name="email_id">Enter Email ID</string>
+    <string name="add_user">Add User</string>
+</resources>
