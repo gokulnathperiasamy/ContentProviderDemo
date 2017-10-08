@@ -5,6 +5,7 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -17,6 +18,9 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    @BindView(R.id.swipe_refresh_container)
+    SwipeRefreshLayout mSwipeRefreshContainer;
+
     @BindView(R.id.tv_email_list)
     TextView mEmailList;
 
@@ -26,13 +30,32 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+
+        setupSwipeRefreshAction();
+    }
+
+    private void setupSwipeRefreshAction() {
+        mSwipeRefreshContainer.setColorScheme(
+                R.color.swipe_color_1, R.color.swipe_color_2,
+                R.color.swipe_color_3, R.color.swipe_color_4);
+        mSwipeRefreshContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshData();
+            }
+        });
+    }
+
+    private void refreshData() {
+        getLoaderManager().initLoader(1, null, this);
+        mSwipeRefreshContainer.setRefreshing(false);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        getLoaderManager().initLoader(1, null, this);
+        refreshData();
     }
 
     @Override
