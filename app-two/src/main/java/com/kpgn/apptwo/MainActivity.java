@@ -5,9 +5,9 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         ButterKnife.bind(this);
 
         setupSwipeRefreshAction();
+        refreshData();
     }
 
     private void setupSwipeRefreshAction() {
@@ -49,13 +50,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private void refreshData() {
         getLoaderManager().initLoader(1, null, this);
         mSwipeRefreshContainer.setRefreshing(false);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        refreshData();
     }
 
     @Override

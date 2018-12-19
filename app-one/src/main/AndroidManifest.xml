@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kpgn.appone">
 
+    <permission android:name="com.kpgn.appone.CustomContentProvider.READ_PERMISSION" />
+    <permission android:name="com.kpgn.appone.CustomContentProvider.WRITE_PERMISSION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,7 +24,10 @@
             android:name=".CustomContentProvider"
             android:authorities="com.kpgn.appone.CustomContentProvider"
             android:exported="true"
-            android:multiprocess="true" />
+            android:grantUriPermissions="true"
+            android:multiprocess="true"
+            android:readPermission="com.kpgn.appone.CustomContentProvider.READ_PERMISSION"
+            android:writePermission="com.kpgn.appone.CustomContentProvider.WRITE_PERMISSION" />
     </application>
 
 </manifest>

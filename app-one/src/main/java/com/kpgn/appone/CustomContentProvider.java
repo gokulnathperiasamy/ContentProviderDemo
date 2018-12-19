@@ -8,7 +8,6 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -33,16 +32,10 @@ public class CustomContentProvider extends ContentProvider {
 
     private SQLiteDatabase db;
 
-    static final String CREATE_DB_TABLE = " CREATE TABLE " + ApplicationConstant.TABLE_NAME
-            + "("
-            + ApplicationConstant.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + ApplicationConstant.COLUMN_EMAIL + " TEXT NOT NULL"
-            + ");";
-
     @Override
     public boolean onCreate() {
         Context context = getContext();
-        DatabaseHelper dbHelper = new DatabaseHelper(context);
+        CustomDatabaseHelper dbHelper = new CustomDatabaseHelper(context);
         db = dbHelper.getWritableDatabase();
         return (db != null);
     }
@@ -83,9 +76,9 @@ public class CustomContentProvider extends ContentProvider {
         long rowID = db.insert(ApplicationConstant.TABLE_NAME, "", values);
 
         if (rowID > 0) {
-            Uri _uri = ContentUris.withAppendedId(CONTENT_URI, rowID);
-            getContext().getContentResolver().notifyChange(_uri, null);
-            return _uri;
+            Uri uriTemp = ContentUris.withAppendedId(CONTENT_URI, rowID);
+            getContext().getContentResolver().notifyChange(uriTemp, null);
+            return uriTemp;
         }
         throw new SQLException("Failed to add a record into " + uri);
     }
@@ -118,20 +111,5 @@ public class CustomContentProvider extends ContentProvider {
         return count;
     }
 
-    private static class DatabaseHelper extends SQLiteOpenHelper {
-        DatabaseHelper(Context context) {
-            super(context, ApplicationConstant.DATABASE_NAME, null, ApplicationConstant.DATABASE_VERSION);
-        }
 
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-            db.execSQL(CREATE_DB_TABLE);
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS " + ApplicationConstant.TABLE_NAME);
-            onCreate(db);
-        }
-    }
 }
